@@ -1,27 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const OpenAI = require("openai");
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
 
 router.post('/', async (req, res) => {
   try {
     const question = req.body.question;
 
-    const response = await client.responses.create({
-      model: "gpt-4.1-mini",
-      input: question
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'llama3',
+        prompt: question,
+        stream: false
+      })
     });
 
-    const answer = response.output[0].content[0].text;
+    const data = await response.json();
 
-    res.json({ answer });
+    res.json({ answer: data.response });
 
   } catch (err) {
-    console.error("AI ERROR:", err.message);
-    res.json({ answer: "AI error – check server console" });
+    res.json({ answer: "Local AI not running" });
   }
 });
 
