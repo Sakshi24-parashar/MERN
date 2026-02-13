@@ -1,5 +1,5 @@
 require("dotenv").config();
-console.log(process.env.OPENAI_API_KEY);
+
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => console.log(`Server running → http://localhost:${PORT}`));
 
